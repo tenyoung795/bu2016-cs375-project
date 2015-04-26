@@ -1,7 +1,7 @@
 template <class Key, class T>
 struct map {
     using size_type = std::size_t;
-    map(size_type bucket_count = /* some default */);
+    map(size_type bucket_count = 0.75);
 
     using value_type = std::pair<const Key, T>;
 
