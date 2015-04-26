@@ -11,9 +11,8 @@ struct map {
     iterator end();
     const_iterator end() const;
 
-    // Args are arguments to constructing a value_type
-    template <class... Args>
-    iterator emplace(Args &&...args);
+    iterator insert(const Key &, const T &);
+    iterator insert(Key &&, T &&);
 
     iterator find(const Key &);
     const iterator find(const Key &) const;
