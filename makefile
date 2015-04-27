@@ -50,8 +50,10 @@ clean :
 # conservative and not optimized.  This is fine as Google Test
 # compiles fast and for ordinary users its source rarely changes.
 gtest-all.o : $(GTEST_DIR)/src/gtest-all.cc
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $^
 
 gtest_main.o : $(GTEST_DIR)/src/gtest_main.cc
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $^
 
 gtest.a : gtest-all.o
 	$(AR) $(ARFLAGS) $@ $^
