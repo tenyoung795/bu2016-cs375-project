@@ -27,6 +27,9 @@ static_assert(should_resize(0.75f, 4, 4), "Must resize a table with one too many
 
 /**
  * Determine the next table size in buckets, which is at least a given size.
+ * The next table size is the first prime greater than or equal to
+ * twice the given size; if that prime falls outside std::size_t's range,
+ * the next table size is SIZE_MAX.
  *
  * @param current_size the current size in buckets.
  * @return The next size in buckets.
