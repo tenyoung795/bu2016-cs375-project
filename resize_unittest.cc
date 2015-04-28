@@ -1,57 +1,38 @@
 #include <cstddef>
 
+#include <utility>
+
 #include "gtest/gtest.h"
 
 #include "resize.h"
 
 namespace cs375 {
 
-TEST(NextTableSize, Zero) {
-    EXPECT_EQ(2u, next_table_size(0u));
+namespace {
+using test_case = std::pair<std::size_t, std::size_t>;
 }
 
-TEST(NextTableSize, One) {
-    EXPECT_EQ(2u, next_table_size(1u));
+struct NextTableSizeTest : ::testing::TestWithParam<test_case> {
+};
+
+TEST_P(NextTableSizeTest, ReturnsNextPrimeAfterDoubling) {
+    auto &&c = GetParam();
+    EXPECT_EQ(c.second, next_table_size(c.first));
 }
 
-TEST(NextTableSize, Two) {
-    EXPECT_EQ(5u, next_table_size(2u));
-}
-
-TEST(NextTableSize, Three) {
-    EXPECT_EQ(7u, next_table_size(3u));
-}
-
-TEST(NextTableSize, Five) {
-    EXPECT_EQ(11u, next_table_size(5u));
-}
-
-TEST(NextTableSize, Seven) {
-    EXPECT_EQ(17u, next_table_size(7u));
-}
-
-TEST(NextTableSize, Eleven) {
-    EXPECT_EQ(23u, next_table_size(11u));
-}
-
-TEST(NextTableSize, Thirteen) {
-    EXPECT_EQ(29u, next_table_size(13u));
-}
-
-TEST(NextTableSize, Seventeen) {
-    EXPECT_EQ(37u, next_table_size(17u));
-}
-
-TEST(NextTableSize, Nineteen) {
-    EXPECT_EQ(41u, next_table_size(19u));
-}
-
-TEST(NextTableSize, TwentyThree) {
-    EXPECT_EQ(47u, next_table_size(23u));
-}
-
-TEST(NextTableSize, SizeMax) {
-    EXPECT_EQ(SIZE_MAX, next_table_size(SIZE_MAX));
-}
+INSTANTIATE_TEST_CASE_P(, NextTableSizeTest,
+    ::testing::Values(
+        test_case{0, 2},
+        test_case{1, 2},
+        test_case{2, 5},
+        test_case{3, 7},
+        test_case{5, 11},
+        test_case{7, 17},
+        test_case{11, 23},
+        test_case{13, 29},
+        test_case{17, 37},
+        test_case{19, 41},
+        test_case{23, 47}
+    ));
 
 }
