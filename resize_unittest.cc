@@ -32,7 +32,8 @@ INSTANTIATE_TEST_CASE_P(, NextTableSizeTest,
         test_case{13, 29},
         test_case{17, 37},
         test_case{19, 41},
-        test_case{23, 47}
+        test_case{23, 47},
+        test_case{SIZE_MAX, SIZE_MAX}
     ));
 
 }
