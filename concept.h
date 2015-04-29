@@ -1,9 +1,7 @@
-template <class Key, class T>
-struct map {
+template <class Key>
+struct set {
     using size_type = std::size_t;
-    map(size_type bucket_count = /* default number of buckets */, float max_load_factor = 0.75);
-
-    using value_type = std::pair<const Key, T>;
+    set(size_type bucket_count = /* default number of buckets */, float max_load_factor = 0.75);
 
     iterator begin();
     const_iterator begin() const;
@@ -11,8 +9,8 @@ struct map {
     iterator end();
     const_iterator end() const;
 
-    iterator insert(const Key &, const T &);
-    iterator insert(Key &&, T &&);
+    template <class.. Args>
+    iterator emplace(Args &&...);
 
     iterator find(const Key &);
     const iterator find(const Key &) const;
