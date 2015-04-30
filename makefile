@@ -29,7 +29,7 @@ CXXFLAGS ?= -std=c++11 -Wall -Wextra -Werror -O3 -pthread
 
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.
-TESTS ?= $(shell cat unittests)
+TESTS ?= $(shell xargs -a unittests echo)
 
 # All Google Test headers.  Usually you shouldn't change this
 # definition.
