@@ -4,6 +4,8 @@
 #include <cstddef>
 
 #include <algorithm>
+#include <functional>
+#include <iterator>
 #include <memory>
 #include <utility>
 
@@ -44,6 +46,47 @@ class sparse_array {
 
         return *result;
     }
+
+    class iterator : public std::iterator<std::forward_iterator_tag, const T> {
+        const T *_ptr;
+        const sparse_array *_array;
+
+        public:
+        constexpr explicit iterator(const sparse_array &array) noexcept:
+            _ptr{array._head}, _array{&array} {
+        }
+
+        constexpr iterator() noexcept:
+            _ptr{}, _array{} {
+        }
+
+        constexpr const T &operator*() const {
+            return *_ptr;
+        }
+
+        constexpr const T *operator->() const noexcept {
+            return _ptr;
+        }
+
+        iterator &operator++() {
+            _ptr = _array->_next[_ptr - _array->_data.get()];
+            return *this;
+        }
+
+        iterator operator++(int) {
+            auto copy = *this;
+            ++*this;
+            return copy;
+        }
+
+        constexpr bool operator==(const iterator &that) const noexcept {
+            return _ptr == that._ptr;
+        }
+
+        constexpr bool operator!=(const iterator &that) const noexcept {
+            return _ptr != that._ptr;
+        }
+    };
 
     public:
     /**
@@ -128,6 +171,14 @@ class sparse_array {
         ptr->~T();
         
         return true;
+    }
+
+    constexpr iterator begin() const noexcept {
+        return iterator{*this};
+    }
+
+    constexpr iterator end() const noexcept {
+        return {};
     }
 
     ~sparse_array() {
