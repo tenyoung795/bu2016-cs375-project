@@ -29,7 +29,7 @@ CXXFLAGS ?= -std=c++11 -Wall -Wextra -Werror -O3 -pthread
 
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.
-TESTS ?= sparse-array_unittest
+TESTS ?= $(shell xargs -a unittests echo)
 
 # All Google Test headers.  Usually you shouldn't change this
 # definition.
@@ -65,3 +65,4 @@ gtest_main.a : gtest-all.o gtest_main.o
 # gtest_main.a, depending on whether it defines its own main()
 # function.
 sparse-array_unittest : sparse-array_unittest.cc sparse-array.h gtest_main.a
+resize_unittest : resize_unittest.cc resize.h gtest_main.a
