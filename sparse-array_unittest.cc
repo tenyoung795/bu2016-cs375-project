@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <array>
 #include <iostream>
+#include <iterator>
 #include <string>
 
 #include "gtest/gtest.h"
@@ -88,21 +89,24 @@ TEST_F(SparseArrayTest, Erase_SecondInserted) {
 }
 
 TEST_F(SparseArrayTest, Iteration_Empty) {
-    std::array<std::string, 0> expected;
-    EXPECT_TRUE(std::is_permutation(array.begin(), array.end(), expected.begin()));
+    EXPECT_EQ(array.end(), array.begin());
 }
 
 TEST_F(SparseArrayTest, Iteration_SizeOne) {
     array.emplace(0, "Hello");
+
+    ASSERT_EQ(1, std::distance(array.begin(), array.end()));
     std::string expected[] = {"Hello"};
-    EXPECT_TRUE(std::is_permutation(array.begin(), array.end(), expected));
+    EXPECT_TRUE(std::is_permutation(std::begin(expected), std::end(expected), array.begin()));
 }
 
 TEST_F(SparseArrayTest, Iteration_SizeTwo) {
     array.emplace(1, "Hello");
     array.emplace(0, "Goodbye");
+
+    ASSERT_EQ(2, std::distance(array.begin(), array.end()));
     std::string expected[] = {"Hello", "Goodbye"};
-    EXPECT_TRUE(std::is_permutation(array.begin(), array.end(), expected));
+    EXPECT_TRUE(std::is_permutation(std::begin(expected), std::end(expected), array.begin()));
 }
 
 TEST(SparseArrayDestructorTest, DoesDestroy) {
