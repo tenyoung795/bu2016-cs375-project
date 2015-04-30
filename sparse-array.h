@@ -51,11 +51,12 @@ class sparse_array {
         const T *_ptr;
         const sparse_array *_array;
 
-        public:
+        friend class sparse_array;
         constexpr explicit iterator(const sparse_array &array) noexcept:
             _ptr{array._head}, _array{&array} {
         }
 
+        public:
         constexpr iterator() noexcept:
             _ptr{}, _array{} {
         }
