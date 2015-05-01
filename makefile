@@ -64,4 +64,5 @@ gtest_main.a : gtest-all.o gtest_main.o
 # A test should link with either gtest.a or
 # gtest_main.a, depending on whether it defines its own main()
 # function.
+sparse-array_unittest : sparse-array_unittest.cc sparse-array.h gtest_main.a
 resize_unittest : resize_unittest.cc resize.h gtest_main.a
