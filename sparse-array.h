@@ -103,6 +103,9 @@ class sparse_array {
         _size{0} {
     }
 
+    sparse_array(sparse_array &&) = default;
+    sparse_array &operator=(sparse_array &&) = default;
+
     constexpr std::size_t capacity() const {
         return _data.get_deleter().capacity;
     }
