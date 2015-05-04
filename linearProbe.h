@@ -25,22 +25,27 @@ namespace cs375{
             std::size_t hashValue = hash_fn(k) % tableSize;
             
             //checks the array
-            while(*sArray.at(hashValue) != k){
+            while(sArray.contains(hashValue)){
+                if(*sArray.at(hashValue) != k){
                 //iterates through the array
                 //1 signifies that location is full or used to be full
-                if(bitVector[hashValue]){
-                    hashValue++;
-                }
+                    if(bitVector[hashValue]){
+                        hashValue++;
+                    }
                 //signifies this location never had a value so no need to search further
-                else{
-                    return -1;
-                }
+                    else{
+                        return -1;
+                    }
                 //loops back around if we hit end of table
-                if(hashValue == tableSize){
-                    hashValue = 0;
+                    if(hashValue == tableSize){
+                        hashValue = 0;
+                    }
+                }
+                else{
+                    return hashValue;
                 }
             }
-            return hashValue;
+            return -1;
         }
         
         
@@ -62,6 +67,10 @@ namespace cs375{
         
         std::size_t size(){
             return sArray.size();
+        }
+        
+        std::size_t tSize(){
+            return tableSize;
         }
         
         void insertKey(Key k){
@@ -98,14 +107,16 @@ namespace cs375{
         
         //returns index of the key k
         bool searchKey(Key k){
-            return searchKeyPrivate(k) != -1;
+            return searchKeyPrivate(k) != (std::size_t) -1;
         }
         
-        void deleteKey(Key k){
+        bool deleteKey(Key k){
             std::size_t hashValue = searchKeyPrivate(k);
-            if(hashValue != -1){
+            if(hashValue != (std::size_t)-1){
                 sArray.erase(hashValue);
+                return true;
             }
+            return false;
         }
     };
 }
