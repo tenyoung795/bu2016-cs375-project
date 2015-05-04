@@ -103,8 +103,28 @@ class sparse_array {
         _size{0} {
     }
 
-    sparse_array(sparse_array &&) = default;
-    sparse_array &operator=(sparse_array &&) = default;
+    sparse_array(sparse_array &&array) noexcept:
+        _data{std::move(array._data)},
+        _next{std::move(array._next)},
+        _prev{std::move(array._prev)},
+        _head{array._head},
+        _size{array._size} {
+        array._head = nullptr;
+        array._size = 0;
+    }
+
+    sparse_array &operator=(sparse_array &&that) noexcept {
+        if (this != &that) {
+            _data = std::move(that._data);
+            _next = std::move(that._next);
+            _prev = std::move(that._prev);
+            _head = that._head;
+            _size = that._size;
+            that._head = nullptr;
+            that._size = 0;
+        }
+        return *this;
+    }
 
     constexpr std::size_t capacity() const {
         return _data.get_deleter().capacity;
