@@ -5,7 +5,6 @@
 #include <utility>
 #include <vector>
 #include <functional>
-#include <type_traits>
 #include "sparse-array.h"
 #include "resize.h"
 
@@ -61,9 +60,6 @@ namespace cs375{
                 }
         }
         
-        linearProbe(linearProbe &&) = default;
-        linearProbe &operator=(linearProbe &&that) = default;
-        
         std::size_t size(){
             return sArray.size();
         }
@@ -79,13 +75,12 @@ namespace cs375{
                 std::size_t oldTableSize = tableSize;
                 tableSize = newTableSize;
                 
-                decltype(*this) probe1{newTableSize};
+                linearProbe probe1{newTableSize};
                 for(std::size_t i = 0; i < oldTableSize; i++){
                     if(sArray.contains(i)){
                         probe1.insertKey(*sArray.at(i));
                     }
                 }
-                static_assert(std::is_same<decltype(*this), decltype(probe1)>::value, "WTF");
                 std::swap(*this, probe1);
             }
             //while the hash value if full
