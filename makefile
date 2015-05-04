@@ -65,8 +65,8 @@ gtest_main.a : gtest-all.o gtest_main.o
 # gtest_main.a, depending on whether it defines its own main()
 # function.
 sparse-array_unittest : sparse-array_unittest.cc sparse-array.h gtest_main.a
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ $^
 resize_unittest : resize_unittest.cc resize.h gtest_main.a
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ $^
 linearProbeTest : linearProbeTest.cc linearProbe.h gtest_main.a
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ $^
