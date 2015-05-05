@@ -15,7 +15,7 @@ namespace cs375 {
         std::size_t tableSize;
         sparse_array <Key> robinArray;
         std::vector <bool> bitVector;
-        std::vector <int> distanceVector;
+        std::vector <std::size_t> distanceVector;
         
         
         
@@ -56,13 +56,12 @@ namespace cs375 {
                 std::swap(*this, robin1);
             }
             
-            int currentDistance = 0;
-            Key currentKey = k;
+            std::size_t currentDistance = 0;
 
             while(robinArray.contains(hashValue)){
                 if(currentDistance > distanceVector[hashValue]){
                     std::swap(currentDistance, distanceVector[hashValue]);
-                    std::swap(currentKey,*robinArray.at(hashValue));
+                    std::swap(k,*robinArray.at(hashValue));
                 }
                 currentDistance++;
                 hashValue++;
@@ -70,16 +69,16 @@ namespace cs375 {
                     hashValue = 0;
                 }
             }
-            robinArray.emplace(hashValue, currentKey);
-            bitVector[hashValue] = 1;
+            robinArray.emplace(hashValue, std::move(k));
+            bitVector[hashValue] = true;
             distanceVector[hashValue] = currentDistance;
         }
         
-        std::size_t searchKeyIndex(Key k){
+        std::size_t searchKeyIndex(const Key &k){
             std::hash<Key> hash_fn;
             std::size_t hashValue = hash_fn(k) % tableSize;
             
-            int currentDistance = 0;
+            std::size_t currentDistance = 0;
             
             while(robinArray.contains(hashValue)){
                 if(*robinArray.at(hashValue) != k){
@@ -105,11 +104,11 @@ namespace cs375 {
             return -1;
         }
         
-        bool searchKey(Key k){
+        bool searchKey(const Key &k){
             return searchKeyIndex(k) != (std::size_t) -1;
         }
         
-        bool deleteKey(Key k){
+        bool deleteKey(const Key &k){
             std::size_t hashValue = searchKeyIndex(k);
             if(hashValue != (std::size_t)-1){
                 robinArray.erase(hashValue);
