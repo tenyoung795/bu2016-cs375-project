@@ -16,33 +16,36 @@ namespace cs375{
         std::size_t tableSize;
         //holds the key values
         sparse_array <Key> sArray;
-        //contains 0 and 1s where 0 signifies nothing was ever there
-        //1 signifies something is or was there
+        //false signifies nothing was there
+        //true signifies there is or was something there
         std::vector <bool> bitVector;
         
         std::size_t searchKeyPrivate(const Key &k){
             std::hash<Key> hash_fn;
-            std::size_t hashValue = hash_fn(k) % tableSize;
+            //mods the hashvalue to be within the table
+            std::size_t hashIndex = hash_fn(k) % tableSize;
             
-            //checks the array
-            while(sArray.contains(hashValue)){
-                if(*sArray.at(hashValue) != k){
-                //iterates through the array
-                //1 signifies that location is full or used to be full
-                    if(bitVector[hashValue]){
-                        hashValue++;
+            while(bitVector[hashIndex]){
+                auto ptr = sArray.at(hashIndex);
+                //if the value isn't equal to k and its not a nullptr we need to keep searching
+                if(!ptr || *ptr != k){
+                    //iterates through the array
+                    //true signifies that location is full or used to be full
+                    if(bitVector[hashIndex]){
+                        hashIndex++;
                     }
-                //signifies this location never had a value so no need to search further
+                    //signifies this location never had a value so no need to search further
                     else{
                         return -1;
                     }
-                //loops back around if we hit end of table
-                    if(hashValue == tableSize){
-                        hashValue = 0;
+                    //loops back around if we hit end of table
+                    if(hashIndex == tableSize){
+                        hashIndex = 0;
                     }
                 }
+                //if the value is equal to k we come here
                 else{
-                    return hashValue;
+                    return hashIndex;
                 }
             }
             return -1;
@@ -50,26 +53,32 @@ namespace cs375{
         
         
     public:
+        
+        //Default constructor
         linearProbe():
             tableSize(17), sArray(tableSize),bitVector(tableSize){
 
         }
-        //Constructor
+        //Constructor with size
         linearProbe(std::size_t arraySize):
             tableSize(arraySize), sArray(tableSize), bitVector(tableSize){
         }
         
+        //returns sparse array size
         std::size_t size(){
             return sArray.size();
         }
         
+        //return tableSize
         std::size_t tSize(){
             return tableSize;
         }
         
-        void insertKey(const Key &k){
+        //inserts a key
+        //returns false if key is already in table
+        bool insertKey(const Key &k){
             std::hash<Key> hash_fn;
-            std::size_t hashValue = hash_fn(k) % tableSize;
+            std::size_t hashIndex = hash_fn(k) % tableSize;
             
             //if load factor is hit then must transfer items to new sparse array
             if(should_resize(0.75f, tableSize, sArray.size()+1)){
@@ -78,36 +87,45 @@ namespace cs375{
                 std::size_t oldTableSize = tableSize;
                 tableSize = newTableSize;
                 
+                //create a new probe because we can just copy our info into the new probe
                 linearProbe probe1{newTableSize};
+                //goes through the whole array and copies into the new probe's array
                 for(std::size_t i = 0; i < oldTableSize; i++){
                     if(sArray.contains(i)){
                         probe1.insertKey(*sArray.at(i));
                     }
                 }
+                //swap the probes so we now have the new probe with larger array size
                 std::swap(*this, probe1);
             }
-            //while the hash value if full
-            while(sArray.contains(hashValue)){
+            //while the hash value is full
+            while(sArray.contains(hashIndex)){
+                if(*sArray.at(hashIndex) == k){
+                    return false;
+                }
+                hashIndex++;
                 //loops back around to the beginning of the table to check for empty slots
-                hashValue++;
-                if(hashValue == tableSize){
-                    hashValue = 0;
+                if(hashIndex == tableSize){
+                    hashIndex = 0;
                 }
             }
             //empty slot found
-            sArray.emplace(hashValue,k);
-            bitVector[hashValue] = true;
+            sArray.emplace(hashIndex,k);
+            bitVector[hashIndex] = true;
+            return true;
         }
         
-        //returns index of the key k
+        //returns true if key is found
         bool searchKey(const Key &k){
             return searchKeyPrivate(k) != (std::size_t) -1;
         }
         
+        //deletes the key if it exists
         bool deleteKey(const Key &k){
-            std::size_t hashValue = searchKeyPrivate(k);
-            if(hashValue != (std::size_t)-1){
-                sArray.erase(hashValue);
+            std::size_t hashIndex = searchKeyPrivate(k);
+            //if hashIndex is -1 it means the key doesn't exist
+            if(hashIndex != (std::size_t)-1){
+                sArray.erase(hashIndex);
                 return true;
             }
             return false;
