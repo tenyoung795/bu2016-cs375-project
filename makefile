@@ -25,11 +25,11 @@ USER_DIR := .
 CPPFLAGS := -isystem $(GTEST_DIR)/include -I$(GTEST_DIR)
 
 # Flags passed to the C++ compiler.
-CXXFLAGS ?= -std=c++11 -Wall -Wextra -Werror -O3 -pthread
+CXXFLAGS ?= -std=c++11 -Wall -Wextra -Wmissing-field-initializers -O3 -pthread
 
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.
-TESTS ?= $(shell xargs -a unittests echo)
+TESTS ?= $(shell xargs echo < unittests)
 
 # All Google Test headers.  Usually you shouldn't change this
 # definition.
@@ -65,4 +65,11 @@ gtest_main.a : gtest-all.o gtest_main.o
 # gtest_main.a, depending on whether it defines its own main()
 # function.
 sparse-array_unittest : sparse-array_unittest.cc sparse-array.h gtest_main.a
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ sparse-array_unittest.cc gtest_main.a
 resize_unittest : resize_unittest.cc resize.h gtest_main.a
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ resize_unittest.cc gtest_main.a
+linearProbeTest : linearProbeTest.cc linearProbe.h gtest_main.a
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ linearProbeTest.cc gtest_main.a
+
+
+
