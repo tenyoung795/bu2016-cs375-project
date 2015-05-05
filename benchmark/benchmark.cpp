@@ -3,6 +3,7 @@
 #include <chrono>
 #include <iostream>
 #include <random>
+#include <ratio>
 #include <utility>
 #include <unordered_set>
 #include <vector>
@@ -19,7 +20,7 @@
  * @return How long it took.
  */
 template <class Runnable>
-static std::chrono::nanoseconds benchmark(Runnable &&r) {
+static std::chrono::duration<double, std::nano> benchmark(Runnable &&r) {
     auto begin = std::chrono::steady_clock::now();
     std::forward<Runnable>(r)();
     return std::chrono::steady_clock::now() - begin;
@@ -32,7 +33,7 @@ int main(int argc, const char *argv[]) {
     }
 
     const auto num_elements = std::strtoul(argv[1], nullptr, 10);
-    const auto capacity = cs375::next_table_size(num_elements);
+    const auto capacity = cs375::next_table_size(static_cast<std::size_t>(static_cast<long double>(num_elements) / 0.75l));
 
     std::random_device rd;
     std::default_random_engine engine(rd());
