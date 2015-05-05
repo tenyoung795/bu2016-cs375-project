@@ -45,12 +45,13 @@ class linearTest : public ::testing::Test {
         probe.insertKey("thing10");
         EXPECT_TRUE(probe.deleteKey("thing10"));
         EXPECT_FALSE(probe.deleteKey("thing10"));
+        EXPECT_FALSE(probe.deleteKey("stanley"));
     }
     
     TEST_F(linearTest, searchExist){
         probe.insertKey("brandon");
         EXPECT_FALSE(probe.searchKey("ten-young"));
-       // EXPECT_TRUE(probe.searchKey("brandon"));
+        EXPECT_TRUE(probe.searchKey("brandon"));
         
     }
     

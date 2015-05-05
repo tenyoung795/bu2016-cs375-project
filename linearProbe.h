@@ -51,18 +51,12 @@ namespace cs375{
         
     public:
         linearProbe():
-            tableSize(17), sArray(tableSize){
-                for(std::size_t i = 0; i < 17; i++){
-                    bitVector.push_back(0);
-                }
-            
+            tableSize(17), sArray(tableSize),bitVector(tableSize){
+
         }
         //Constructor
         linearProbe(std::size_t arraySize):
-            tableSize(arraySize), sArray(tableSize){
-                for(std::size_t i = 0; i < tableSize; i++){
-                    bitVector.push_back(0);
-                }
+            tableSize(arraySize), sArray(tableSize), bitVector(tableSize){
         }
         
         std::size_t size(){
@@ -78,7 +72,7 @@ namespace cs375{
             std::size_t hashValue = hash_fn(k) % tableSize;
             
             //if load factor is hit then must transfer items to new sparse array
-            if(should_resize(0.75f, tableSize, sArray.capacity()+1)){
+            if(should_resize(0.75f, tableSize, sArray.size()+1)){
                 
                 std::size_t newTableSize = next_table_size(tableSize);
                 std::size_t oldTableSize = tableSize;
