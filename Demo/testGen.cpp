@@ -1,89 +1,115 @@
 #include "testGen.h"
+#include "../robinHoodHash.h"
 
+
+/**main
+	This program is to allow an easy demo
+	of all the functionality of the round robin probe
+	with underlying sparse array data structure
+**/
 int main(int argc, char *argv[])
 {
 int num_of_frames;
 std::string output_name;
 std::ofstream output;
-std::string input;
-/*
-	try{
-		initialization(argc, argv, num_of_frames, load, output_name);
-		openOutfile(output_name, output);
-		writeInstructions(output, load, num_of_frames);
-		closeOutfile(output);
-	} catch (int a) {
-		exit(1);	
+std::string input1;
+std::string input2;
+std::string temp;
+	if(argc == 1) {
+		std::cout << "\tType in '-u' for usage string" 
+		  << std::endl;
 	}
-*/
-	while(input != "EXIT") {
-	std::cin >> input;
-	toUpper(input);
+	cs375::robinHoodHash<std::string> hashObj;
+	
+	// Start of user interface 
+	std::cout << "\tType 'exit' to exit" << 
+	  "\n\tType 'insert' <key> to insert " <<
+	  "\n\tType 'delete' <key> to delete" << 
+	  "\n\tType 'find' <key> to find index" << 
+	  "\n\tType 'size' to get the current size" << 
+	  "\n\tType 'tsize' to get the table size" << 
+	  "\n\tType 'help' to see this again" << 
+	  std::endl;
+	// Loops to receive user input
+	while(1) {
+		std::getline(std::cin, temp);
+		std::stringstream stream;
+		stream << temp;
+		stream >> input1 >> input2;
+		std::string temp2 = input1;
+		toUpper(temp2);
+		//Forces exit from ui 
+		if (temp2 == "EXIT"){
+			exit(0);
+		}
+		else if (temp2 == "HELP") {
+			std::cout << "\tType 'exit' to exit" << 
+	  		  "\n\tType 'insert' <key> to insert " <<
+	  		  "\n\tType 'find' <key> to find index" << 
+	  		  "\n\tType 'size' to get the current size" << 
+			  "\n\tType 'tsize' to get the table size" << 
+	  		  "\n\tType 'delete' <key> to delete" << 
+			  "\n\tType 'help' to see this again" << 
+	  		  std::endl;
+		}	
+		//Insertiion code
+		else if (input1 == "insert" && hashObj.searchKey(input2)) {
+			std::cout << "\t->Currently already in hash table"
+			  <<std::endl;
+		}
+		else if(input1 == "insert"){
+			if(hashObj.insertKey(input2)) {
+				std::cout <<"\t->'" <<  input2 <<
+				  "' successfully inserted "
+				  << std::endl;
+			} else {
+				std::cout << "\t->Input failed" 
+				  << std::endl;
+			}
+		}
+		//Deletion code
+		else if (input1 == "delete" && !hashObj.searchKey(input2)) {
+			std::cout << "\t->'" << input2 << "' not int table" <<
+			  std::endl;
+		}
+		else if(input1 == "delete"){
+			if(hashObj.deleteKey(input2)) {
+				std::cout << "\t->" <<  input2 <<
+				  " successfully deleted "
+				  << std::endl;
+			}
+			
+		}
+		//Find code
+		else if (input1 == "find" && hashObj.searchKey(input2)) {
+			std::cout << "\t->'" << input2 << "' is in " <<
+			  hashObj.searchKeyIndex(input2) << 
+			  std::endl;
+		}
+		else if(input1 == "find"){
+			std::cout << "\t->" <<  input2 <<
+				  " is not in the hashtable "
+				  << std::endl;
+		}
+		//Side code
+		else if (input1 == "size") {
+			std::cout << "\t->'" << hashObj.size() <<
+			  std::endl;
+		}
+		//Table side code
+		else if (input1 == "tsize") {
+			std::cout << "\t->'" << hashObj.tSize() <<
+			  std::endl;
+		}
+		else {
+		
+			std::cerr << "\t->ERROR:That is not a valid input " << std::endl;
+		}
 	}
 	return 0;
 }
 
 
-/*
-void initialization(int argc, char *argv[], int &num_of_frames, load_factor &load, std::string &out) 
-{ 
-	if (argc == 1) {
-                std::cout << "\tUse option -u for user commands\n"
-                  << std::endl;
-                throw 0;
-        } else if (argc <= 4) {
-                for (int i = 1; i < argc; i++) {
-                        if (strcmp(argv[i], "-u") == 0) {
-                                std::cout << "./testGen \n\t<frames-of-memory>"
-                                  " [NONE | LOW | MEDIUM | HIGH | EXTREME] "
-				  "<output-file> expected\n"
-				  << std::endl;
-                                throw 0;
-                        }
-                        if (i == 1) {
-                                if(isNumeric(argv[i])){
-                                        num_of_frames = atoi(argv[i]);
-					if (num_of_frames == 0) {
-						std::cerr << "ERROR: num-of-frames can't = 0"
-						  << std::endl;
-						throw(1);
-					}
-                                } else {
-                                  std::cerr << "ERROR: Non-numeric frame size\n"
-                                    << std::endl;
-                                  throw 1;
-                                }
-                        }
-			if (i == 2) {
-				std::string temp = argv[i];
-				toUpper(temp);
-				if (temp == "NONE")
-					load = NONE;
-				else if (temp == "LOW")	
-					load = LOW;
-				else if (temp == "MEDIUM")
-					load = MEDIUM;
-				else if (temp == "HIGH")
-					load = HIGH;
-				else if (temp == "EXTREME")
-					load = EXTREME;
-				else {
-				std::cerr << "ERROR: INCORRECT LOAD FACTOR INPUT" 
-				  << std::endl; 
-				throw 1;
-				}
-			}
-                        if (i == 3) {
-				out = argv[i];
-                        }
-                }
-        } else {
-                std::cerr << "ERROR: Incorrect format. See '-u'\n"
-                  << std::endl;
-                throw 1;
-        }
-}
-*/
 bool openOutfile(std::string output_name, std::ofstream &outfile)
 {
 	if (output_name != "") {

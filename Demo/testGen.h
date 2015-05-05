@@ -5,6 +5,7 @@
 #include <fstream>
 #include <vector>
 #include <random>
+#include <sstream>
 
 enum load_factor {NONE, LOW, MEDIUM, HIGH, EXTREME};
 void initialization(int argc, char *argv[], int &num_of_Frames, 

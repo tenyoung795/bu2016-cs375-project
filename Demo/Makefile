@@ -1,7 +1,7 @@
 CC = g++
 CFLAGS = -g -std=c++0x 
 INPUT = testGen
-OUTPUT = program4
+OUTPUT =  userInterface
 
 all: $(INPUT)
 
