@@ -37,7 +37,7 @@ namespace cs375 {
             return tableSize;
         }
         
-        void insertKey(Key k){
+        bool insertKey(Key k){
             std::hash <Key> hash_fn;
             std::size_t hashValue = hash_fn(k) % tableSize;
             
@@ -59,6 +59,9 @@ namespace cs375 {
             std::size_t currentDistance = 0;
 
             while(robinArray.contains(hashValue)){
+                if (*robinArray.at(hashValue) == k) {
+                    return false;
+                }
                 if(currentDistance > distanceVector[hashValue]){
                     std::swap(currentDistance, distanceVector[hashValue]);
                     std::swap(k,*robinArray.at(hashValue));
@@ -72,6 +75,7 @@ namespace cs375 {
             robinArray.emplace(hashValue, std::move(k));
             bitVector[hashValue] = true;
             distanceVector[hashValue] = currentDistance;
+            return true;
         }
         
         std::size_t searchKeyIndex(const Key &k){
@@ -80,10 +84,11 @@ namespace cs375 {
             
             std::size_t currentDistance = 0;
             
-            while(robinArray.contains(hashValue)){
-                if(*robinArray.at(hashValue) != k){
+            while(bitVector[hashValue]) {
+                auto ptr = robinArray.at(hashValue);
+                if(!ptr || *ptr != k){
                     //1 signifies that location is full or used to be full
-                    if(bitVector[hashValue] && distanceVector[hashValue] >= currentDistance){
+                    if(distanceVector[hashValue] >= currentDistance){
                         hashValue++;
                         currentDistance++;
                     }
