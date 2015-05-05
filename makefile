@@ -70,6 +70,5 @@ resize_unittest : resize_unittest.cc resize.h gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ resize_unittest.cc gtest_main.a
 linearProbeTest : linearProbeTest.cc linearProbe.h gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ linearProbeTest.cc gtest_main.a
-
-
-
+doubleLinearProbeTest : doubleLinearProbeTest.cc doubleLinearProbe.h gtest_main.a
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ doubleLinearProbeTest.cc gtest_main.a

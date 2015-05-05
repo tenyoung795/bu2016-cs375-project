@@ -1,3 +1,4 @@
 resize_unittest
 sparse-array_unittest
 linearProbeTest
+doubleLinearProbeTest
