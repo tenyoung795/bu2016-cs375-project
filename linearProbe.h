@@ -18,9 +18,9 @@ namespace cs375{
         sparse_array <Key> sArray;
         //contains 0 and 1s where 0 signifies nothing was ever there
         //1 signifies something is or was there
-        std::vector <int> bitVector;
+        std::vector <bool> bitVector;
         
-        std::size_t searchKeyPrivate(Key k){
+        std::size_t searchKeyPrivate(const Key &k){
             std::hash<Key> hash_fn;
             std::size_t hashValue = hash_fn(k) % tableSize;
             
@@ -67,7 +67,7 @@ namespace cs375{
             return tableSize;
         }
         
-        void insertKey(Key k){
+        void insertKey(const Key &k){
             std::hash<Key> hash_fn;
             std::size_t hashValue = hash_fn(k) % tableSize;
             
@@ -96,15 +96,15 @@ namespace cs375{
             }
             //empty slot found
             sArray.emplace(hashValue,k);
-            bitVector[hashValue] = 1;
+            bitVector[hashValue] = true;
         }
         
         //returns index of the key k
-        bool searchKey(Key k){
+        bool searchKey(const Key &k){
             return searchKeyPrivate(k) != (std::size_t) -1;
         }
         
-        bool deleteKey(Key k){
+        bool deleteKey(const Key &k){
             std::size_t hashValue = searchKeyPrivate(k);
             if(hashValue != (std::size_t)-1){
                 sArray.erase(hashValue);
